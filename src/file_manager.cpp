@@ -5,9 +5,7 @@
 #include <iostream>
 #include <sstream>
 
-constexpr size_t PIECE_SIZE = 256 * 1024;
-
-std::vector<Piece> chunk_file(const std::string &filename) {
+std::vector<Piece> chunk_file(const std::string &filename, size_t piece_size) {
     std::ifstream file(filename, std::ios::binary);
     std::vector<Piece> pieces;
 
@@ -18,8 +16,8 @@ std::vector<Piece> chunk_file(const std::string &filename) {
 
     int index = 0;
     while (file.good()) {
-        std::vector<char> buffer(PIECE_SIZE);
-        file.read(buffer.data(), PIECE_SIZE);
+        std::vector<char> buffer(piece_size);
+        file.read(buffer.data(), piece_size);
         std::streamsize bytesRead = file.gcount();
         buffer.resize(bytesRead);
 
