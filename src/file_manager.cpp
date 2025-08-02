@@ -1,30 +1,18 @@
 #include "file_manager.hpp"
+#include "sha1_util.hpp"
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <openssl/sha.h>
 #include <sstream>
 
 constexpr size_t PIECE_SIZE = 256 * 1024;
-
-std::string sha1_hash(const std::vector<char> &data) {
-    unsigned char hash[SHA_DIGEST_LENGTH];
-    SHA1(reinterpret_cast<const unsigned char *>(data.data()), data.size(),
-         hash);
-
-    std::ostringstream ss;
-    for (int i = 0; i < SHA_DIGEST_LENGTH; ++i) {
-        ss << std::hex << std::setw(2) << std::setfill('0') << (int)hash[i];
-    }
-    return ss.str();
-}
 
 std::vector<Piece> chunk_file(const std::string &filename) {
     std::ifstream file(filename, std::ios::binary);
     std::vector<Piece> pieces;
 
     if (!file) {
-        std::cerr << "Error: Failed to open file: " << filename << "\n";
+        perror("Error: Failed to open file");
         return pieces;
     }
 
@@ -39,7 +27,7 @@ std::vector<Piece> chunk_file(const std::string &filename) {
             break;
         }
 
-        std::string hash = sha1_hash(buffer);
+        std::string hash = sha1_hex(buffer);
         pieces.push_back({index++, buffer, hash});
     }
 
