@@ -1,4 +1,5 @@
 #pragma once
+#include "piece.hpp"
 #include <string>
 #include <vector>
 
@@ -8,7 +9,8 @@ struct MetaFile {
     size_t piece_size;
     std::vector<std::string> piece_hashes;
 
-    static MetaFile generate(const std::string &path, size_t piece_size);
+    static MetaFile generate(const std::vector<Piece> &pieces,
+                             size_t piece_size, const std::string &file_name);
     static MetaFile load_from_file(const std::string &path);
     void save_to_file(const std::string &path) const;
 };

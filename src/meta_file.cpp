@@ -1,13 +1,12 @@
 #include "meta_file.hpp"
 #include "file_manager.hpp"
-#include "piece.hpp"
 #include "sha1_util.hpp"
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
 
-MetaFile MetaFile::generate(const std::string &path, size_t piece_size) {
-    std::vector<Piece> pieces = chunk_file(path, piece_size);
+MetaFile MetaFile::generate(const std::vector<Piece> &pieces, size_t piece_size,
+                            const std::string &file_name) {
 
     std::vector<std::string> hashes;
     for (const auto &p : pieces) {
@@ -19,7 +18,7 @@ MetaFile MetaFile::generate(const std::string &path, size_t piece_size) {
         file_sz += p.data.size();
     }
 
-    return MetaFile{path, file_sz, piece_size, hashes};
+    return MetaFile{file_name, file_sz, piece_size, hashes};
 }
 
 void MetaFile::save_to_file(const std::string &path) const {
