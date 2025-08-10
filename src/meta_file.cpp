@@ -3,6 +3,7 @@
 #include "sha1_util.hpp"
 #include <fstream>
 #include <iostream>
+#include <openssl/sha.h>
 #include <stdexcept>
 
 MetaFile MetaFile::generate(const std::vector<Piece> &pieces, size_t piece_size,
@@ -57,4 +58,23 @@ MetaFile MetaFile::load_from_file(const std::string &path) {
     }
 
     return meta;
+}
+
+std::array<uint8_t, NODE_ID_BYTES> MetaFile::hash() const {
+    SHA_CTX ctx;
+    SHA1_Init(&ctx);
+
+    SHA1_Update(&ctx, file_name.data(), file_name.size());
+
+    SHA1_Update(&ctx, &file_size, sizeof(file_size));
+    SHA1_Update(&ctx, &piece_size, sizeof(piece_size));
+
+    for (const auto &phash : piece_hashes) {
+        SHA1_Update(&ctx, phash.data(), phash.size());
+    }
+
+    std::array<uint8_t, NODE_ID_BYTES> result{};
+    SHA1_Final(result.data(), &ctx);
+
+    return result;
 }

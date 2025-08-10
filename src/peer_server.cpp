@@ -8,6 +8,11 @@
 #include <unistd.h>
 
 void handle_client(int client_sock, const std::vector<Piece> &pieces) {
+    if (pieces.size() == 0) {
+        close(client_sock);
+        return;
+    }
+
     int requested_index;
     ssize_t bytes =
         recv(client_sock, &requested_index, sizeof(requested_index), 0);

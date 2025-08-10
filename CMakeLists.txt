@@ -13,6 +13,7 @@ add_executable(p2pshare
     src/peer_client.cpp
     src/meta_file.cpp
     src/sha1_util.cpp
+    src/kademlia_node.cpp
 )
 
 find_package(OpenSSL REQUIRED)

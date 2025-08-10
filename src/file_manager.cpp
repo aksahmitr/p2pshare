@@ -27,6 +27,7 @@ std::vector<Piece> chunk_file(const std::string &filename, size_t piece_size) {
 
         std::string hash = sha1_hex(buffer);
         pieces.push_back({index++, buffer, hash});
+        std::cout << "Piece " << pieces.size() << ": " << hash << "\n";
     }
 
     if (file.bad()) {

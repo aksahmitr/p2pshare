@@ -4,4 +4,5 @@
 #include <vector>
 
 std::vector<Piece> chunk_file(const std::string &filename, size_t piece_size);
+
 void print_piece_hashes(const std::vector<Piece> &pieces);
